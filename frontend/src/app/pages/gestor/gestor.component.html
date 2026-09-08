@@ -1,0 +1,73 @@
+<div class="page">
+  <header class="topbar">
+    <h1>AutoConnect — Panel de gestor</h1>
+    <div class="user-info">
+      <a routerLink="/dashboard" class="link-btn">Mi panel</a>
+      <span>{{ auth.currentUser()?.nombre }}</span>
+      <button class="link-btn" (click)="auth.logout()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main class="content">
+    <div *ngIf="loading">Cargando...</div>
+
+    <ng-container *ngIf="!loading && summary">
+      <section class="stats">
+        <div class="stat-card ok">
+          <span class="stat-number">{{ summary.validados }}</span>
+          <span>Validados</span>
+        </div>
+        <div class="stat-card warn">
+          <span class="stat-number">{{ summary.pendientes }}</span>
+          <span>Pendientes</span>
+        </div>
+        <div class="stat-card danger">
+          <span class="stat-number">{{ summary.vencidos }}</span>
+          <span>Vencidos</span>
+        </div>
+      </section>
+
+      <section class="header-row">
+        <h2>Documentos de todos los usuarios</h2>
+      </section>
+
+      <div class="empty" *ngIf="documents.length === 0">No hay documentos registrados todavía.</div>
+
+      <div class="table-wrap" *ngIf="documents.length > 0">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Vehículo</th>
+              <th>Dueño</th>
+              <th>Tipo</th>
+              <th>Vencimiento</th>
+              <th>Estado</th>
+              <th>Validado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let d of documents">
+              <td>{{ vehiclePlaca(d) }}</td>
+              <td>{{ ownerName(d) }}</td>
+              <td>{{ d.tipo }}</td>
+              <td>{{ d.fechaVencimiento | date: 'dd/MM/yyyy' }}</td>
+              <td><span class="badge" [ngClass]="d.estado">{{ d.estado }}</span></td>
+              <td>{{ d.validado ? 'Sí' : 'No' }}</td>
+              <td>
+                <button
+                  class="link-btn"
+                  style="width: auto; color: #2563eb;"
+                  [disabled]="updatingId === d._id"
+                  (click)="toggleValidado(d)"
+                >
+                  {{ d.validado ? 'Invalidar' : 'Validar' }}
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+  </main>
+</div>

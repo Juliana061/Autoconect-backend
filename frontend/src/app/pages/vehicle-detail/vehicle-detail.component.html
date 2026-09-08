@@ -1,0 +1,66 @@
+<div class="page">
+  <header class="topbar">
+    <a routerLink="/dashboard" class="link-btn">← Volver</a>
+    <h1 *ngIf="vehicle">{{ vehicle.placa }}</h1>
+  </header>
+
+  <main class="content">
+    <div *ngIf="loading">Cargando...</div>
+
+    <ng-container *ngIf="!loading && vehicle">
+      <p class="subtitle">{{ vehicle.marca }} {{ vehicle.modelo }} <span *ngIf="vehicle.anio">· {{ vehicle.anio }}</span></p>
+
+      <section class="two-col">
+        <div>
+          <h2>Documentos</h2>
+          <div class="empty" *ngIf="documents.length === 0">Aún no has subido documentos para este vehículo.</div>
+          <div class="doc-list">
+            <div class="doc-item" *ngFor="let d of documents" [class]="d.estado">
+              <div class="doc-info">
+                <strong>{{ d.tipo.replace('_', ' ') }}</strong>
+                <span>Vence: {{ d.fechaVencimiento | date: 'dd/MM/yyyy' }}</span>
+                <span class="badge" [class]="d.estado">{{ estadoLabel(d.estado) }}</span>
+              </div>
+              <div class="doc-actions">
+                <a [href]="'http://localhost:4000' + d.archivoUrl" target="_blank">Ver archivo</a>
+                <button class="link-btn danger" (click)="deleteDocument(d._id)">Eliminar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2>Subir nuevo documento</h2>
+          <form [formGroup]="form" (ngSubmit)="submitDocument()" class="card-form">
+            <div class="field">
+              <label>Tipo de documento</label>
+              <select formControlName="tipo">
+                <option *ngFor="let t of tipos" [value]="t.value">{{ t.label }}</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Número (opcional)</label>
+              <input type="text" formControlName="numero" placeholder="N° de póliza / documento" />
+            </div>
+            <div class="field">
+              <label>Fecha de expedición (opcional)</label>
+              <input type="date" formControlName="fechaExpedicion" />
+            </div>
+            <div class="field">
+              <label>Fecha de vencimiento</label>
+              <input type="date" formControlName="fechaVencimiento" />
+            </div>
+            <div class="field">
+              <label>Archivo (PDF, JPG o PNG)</label>
+              <input type="file" (change)="onFileSelected($event)" accept=".pdf,.jpg,.jpeg,.png" />
+            </div>
+
+            <p class="error" *ngIf="error">{{ error }}</p>
+
+            <button type="submit" [disabled]="uploading">{{ uploading ? 'Subiendo...' : 'Subir documento' }}</button>
+          </form>
+        </div>
+      </section>
+    </ng-container>
+  </main>
+</div>
