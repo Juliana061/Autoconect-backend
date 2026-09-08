@@ -1,0 +1,87 @@
+<div class="page">
+  <header class="topbar">
+    <h1>AutoConnect — Administración</h1>
+    <div class="user-info">
+      <a routerLink="/dashboard" class="link-btn">Mi panel</a>
+      <span>{{ auth.currentUser()?.nombre }}</span>
+      <button class="link-btn" (click)="auth.logout()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main class="content">
+    <div *ngIf="loading">Cargando...</div>
+
+    <ng-container *ngIf="!loading && summary">
+      <section class="stats">
+        <div class="stat-card ok">
+          <span class="stat-number">{{ summary.totalUsers }}</span>
+          <span>Usuarios registrados</span>
+        </div>
+        <div class="stat-card warn">
+          <span class="stat-number">{{ summary.totalVehicles }}</span>
+          <span>Vehículos</span>
+        </div>
+        <div class="stat-card ok">
+          <span class="stat-number">{{ summary.totalDocuments }}</span>
+          <span>Documentos</span>
+        </div>
+        <div class="stat-card danger">
+          <span class="stat-number">{{ summary.vencidos }}</span>
+          <span>Documentos vencidos</span>
+        </div>
+      </section>
+
+      <section class="header-row">
+        <h2>Vehículos registrados por todos los usuarios</h2>
+      </section>
+
+      <div class="empty" *ngIf="vehicles.length === 0">Todavía no hay vehículos registrados en el sistema.</div>
+
+      <div class="table-wrap" *ngIf="vehicles.length > 0">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Placa</th>
+              <th>Marca / Modelo</th>
+              <th>Año</th>
+              <th>Dueño</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let v of vehicles">
+              <td>{{ v.placa }}</td>
+              <td>{{ v.marca }} {{ v.modelo }}</td>
+              <td>{{ v.anio || '-' }}</td>
+              <td>{{ ownerName(v) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <section class="header-row" style="margin-top: 2rem;">
+        <h2>Usuarios registrados</h2>
+      </section>
+
+      <div class="table-wrap" *ngIf="users.length > 0">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>WhatsApp</th>
+              <th>Rol</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of users">
+              <td>{{ u.nombre }}</td>
+              <td>{{ u.email }}</td>
+              <td>{{ u.telefono }}</td>
+              <td>{{ u.role }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+  </main>
+</div>

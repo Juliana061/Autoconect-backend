@@ -1,0 +1,40 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>Crear cuenta</h1>
+    <p class="subtitle">Regístrate con el número de WhatsApp donde quieres recibir tus alertas</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label>Nombre completo</label>
+        <input type="text" formControlName="nombre" placeholder="Juliana Pérez"
+               [class.invalid]="f['nombre'].invalid && f['nombre'].touched" />
+      </div>
+
+      <div class="field">
+        <label>Correo electrónico</label>
+        <input type="email" formControlName="email" placeholder="tucorreo@ejemplo.com"
+               [class.invalid]="f['email'].invalid && f['email'].touched" />
+      </div>
+
+      <div class="field">
+        <label>Contraseña</label>
+        <input type="password" formControlName="password" placeholder="••••••••"
+               [class.invalid]="f['password'].invalid && f['password'].touched" />
+        <span class="hint" *ngIf="f['password'].invalid && f['password'].touched">Mínimo 6 caracteres</span>
+      </div>
+
+      <div class="field">
+        <label>WhatsApp (código país + número, sin +)</label>
+        <input type="text" formControlName="telefono" placeholder="573001234567"
+               [class.invalid]="f['telefono'].invalid && f['telefono'].touched" />
+        <span class="hint" *ngIf="f['telefono'].invalid && f['telefono'].touched">Formato: código país + número, ej. 573001234567</span>
+      </div>
+
+      <p class="error" *ngIf="error">{{ error }}</p>
+
+      <button type="submit" [disabled]="loading">{{ loading ? 'Creando cuenta...' : 'Registrarme' }}</button>
+    </form>
+
+    <p class="switch">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+  </div>
+</div>

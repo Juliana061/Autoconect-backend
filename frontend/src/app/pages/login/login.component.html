@@ -1,0 +1,28 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>AutoConnect</h1>
+    <p class="subtitle">Inicia sesión para gestionar los documentos de tus vehículos</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label>Correo electrónico</label>
+        <input type="email" formControlName="email" placeholder="tucorreo@ejemplo.com"
+               [class.invalid]="f['email'].invalid && f['email'].touched" />
+        <span class="hint" *ngIf="f['email'].invalid && f['email'].touched">Correo válido requerido</span>
+      </div>
+
+      <div class="field">
+        <label>Contraseña</label>
+        <input type="password" formControlName="password" placeholder="••••••••"
+               [class.invalid]="f['password'].invalid && f['password'].touched" />
+        <span class="hint" *ngIf="f['password'].invalid && f['password'].touched">Mínimo 6 caracteres</span>
+      </div>
+
+      <p class="error" *ngIf="error">{{ error }}</p>
+
+      <button type="submit" [disabled]="loading">{{ loading ? 'Ingresando...' : 'Ingresar' }}</button>
+    </form>
+
+    <p class="switch">¿No tienes cuenta? <a routerLink="/register">Regístrate</a></p>
+  </div>
+</div>

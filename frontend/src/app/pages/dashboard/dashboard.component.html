@@ -1,0 +1,63 @@
+<div class="page">
+  <header class="topbar">
+    <h1>AutoConnect</h1>
+    <div class="user-info">
+      <a *ngIf="auth.currentUser()?.role === 'admin'" routerLink="/admin" class="link-btn">Panel admin</a>
+      <a
+        *ngIf="auth.currentUser()?.role === 'gestor' || auth.currentUser()?.role === 'admin'"
+        routerLink="/gestor"
+        class="link-btn"
+      >
+        Panel gestor
+      </a>
+      <a
+        *ngIf="whatsappBotUrl"
+        [href]="whatsappBotUrl"
+        target="_blank"
+        rel="noopener"
+        class="link-btn whatsapp-btn"
+      >
+        💬 Chatea con el bot
+      </a>
+      <span>{{ auth.currentUser()?.nombre }}</span>
+      <button class="link-btn" (click)="auth.logout()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main class="content">
+    <div *ngIf="loading">Cargando...</div>
+
+    <ng-container *ngIf="!loading">
+      <section class="stats">
+        <div class="stat-card ok">
+          <span class="stat-number">{{ vigentes }}</span>
+          <span>Vigentes</span>
+        </div>
+        <div class="stat-card warn">
+          <span class="stat-number">{{ porVencer }}</span>
+          <span>Por vencer</span>
+        </div>
+        <div class="stat-card danger">
+          <span class="stat-number">{{ vencidos }}</span>
+          <span>Vencidos</span>
+        </div>
+      </section>
+
+      <section class="header-row">
+        <h2>Mis vehículos</h2>
+        <a routerLink="/vehicles/nuevo" class="btn-primary">+ Agregar vehículo</a>
+      </section>
+
+      <div class="empty" *ngIf="vehicles.length === 0">
+        Aún no tienes vehículos registrados. Agrega uno para empezar a gestionar sus documentos.
+      </div>
+
+      <div class="grid">
+        <a class="vehicle-card" *ngFor="let v of vehicles" [routerLink]="['/vehicles', v._id]">
+          <h3>{{ v.placa }}</h3>
+          <p>{{ v.marca }} {{ v.modelo }} <span *ngIf="v.anio">· {{ v.anio }}</span></p>
+        </a>
+      </div>
+    </ng-container>
+  </main>
+</div>
